@@ -10,17 +10,26 @@ import litLogo from './assets/lit.svg'
  */
 @customElement('nx-comments')
 export class NxComments extends LitElement {
-  /**
-   * Copy for the read the docs hint.
-   */
-  @property()
-  docsHint = 'Click on the Vite and Lit logos to learn more'
 
   /**
-   * The number of times the button has been clicked.
+   * Whether to enable OwO selector
    */
-  @property({ type: Number })
-  count = 0
+  @property({ type: Boolean })
+  owoSelectorState = true
+
+  /**
+   * Whether to enable Emoji selector
+   */
+  @property({ type: Boolean })
+  emojiSelectorState = true
+
+  /**
+   * OwO Config File Url
+   */
+  @property({ type: String || undefined })
+  owoUrl?: string | undefined
+
+
 
   render() {
     return html`
@@ -34,17 +43,13 @@ export class NxComments extends LitElement {
       </div>
       <slot></slot>
       <div class="card">
-        <button @click=${this._onClick} part="button">
-          count is ${this.count}
+        <button  part="button">
+          
         </button>
       </div>
-      <p class="read-the-docs">${this.docsHint}</p>
     `
   }
 
-  private _onClick() {
-    this.count++
-  }
 
   static styles = css`
     :host {

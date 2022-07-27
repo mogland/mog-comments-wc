@@ -7,15 +7,18 @@ import { LitElement } from 'lit';
  */
 export declare class NxComments extends LitElement {
     /**
-     * Copy for the read the docs hint.
+     * Whether to enable OwO selector
      */
-    docsHint: string;
+    owoSelectorState: boolean;
     /**
-     * The number of times the button has been clicked.
+     * Whether to enable Emoji selector
      */
-    count: number;
+    emojiSelectorState: boolean;
+    /**
+     * OwO Config File Url
+     */
+    owoUrl?: string | undefined;
     render(): import("lit").TemplateResult<1>;
-    private _onClick;
     static styles: import("lit").CSSResult;
 }
 declare global {
