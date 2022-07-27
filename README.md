@@ -4,6 +4,47 @@
 >
 > A Comment Web Component for NEXT web
 
+## API
+
+<!-- wc-api:start -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+### `src/nx-comments.ts`:
+
+#### class: `NxComments`
+
+##### Superclass
+
+| Name         | Module | Package |
+| ------------ | ------ | ------- |
+| `LitElement` |        | lit     |
+
+##### Fields
+
+| Name                 | Privacy | Type                               | Default | Description                      | Inherited From |
+| -------------------- | ------- | ---------------------------------- | ------- | -------------------------------- | -------------- |
+| `owoSelectorState`   |         | `boolean`                          | `true`  | Whether to enable OwO selector   |                |
+| `emojiSelectorState` |         | `boolean`                          | `true`  | Whether to enable Emoji selector |                |
+| `owoUrl`             |         | `string \| undefined \| undefined` |         | OwO Config File Url              |                |
+
+##### CSS Parts
+
+| Name     | Description |
+| -------- | ----------- |
+| `button` | The button  |
+
+##### Slots
+
+| Name | Description             |
+| ---- | ----------------------- |
+|      | This element has a slot |
+
+<hr/>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+<!-- wc-api:end -->
+
 ## Stack
 
 - [Lit](https://github.com/lit/lit/) 
