@@ -8,8 +8,8 @@ import litLogo from './assets/lit.svg'
  * @slot - This element has a slot
  * @csspart button - The button
  */
-@customElement('my-element')
-export class MyElement extends LitElement {
+@customElement('nx-comments')
+export class NxComments extends LitElement {
   /**
    * Copy for the read the docs hint.
    */
@@ -120,6 +120,6 @@ export class MyElement extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'my-element': MyElement
+    'nx-comments': NxComments
   }
 }
