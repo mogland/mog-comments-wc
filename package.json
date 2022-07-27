@@ -21,19 +21,19 @@
     "docs:gen": "npm run analyze && esno scripts/gen-docs.ts"
   },
   "dependencies": {
-    "lit": "^2.2.7"
+    "lit": "2.2.8"
   },
   "devDependencies": {
-    "@custom-elements-manifest/analyzer": "^0.6.3",
-    "@custom-elements-manifest/to-markdown": "^0.1.0",
-    "@types/node": "^18.6.1",
-    "@yunyoujun/utils": "^0.2.3",
+    "@custom-elements-manifest/analyzer": "0.6.3",
+    "@custom-elements-manifest/to-markdown": "0.1.0",
+    "@types/node": "18.6.1",
+    "@yunyoujun/utils": "0.2.3",
     "esno": "*",
     "fs": "0.0.1-security",
-    "path": "^0.12.7",
-    "typescript": "^4.6.4",
-    "url": "^0.11.0",
-    "vite": "^3.0.0"
+    "path": "0.12.7",
+    "typescript": "4.7.4",
+    "url": "0.11.0",
+    "vite": "3.0.3"
   },
   "customElements": "dist/nx-comments.json"
 }
