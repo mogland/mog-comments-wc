@@ -1,8 +1,27 @@
-# NEXT Comment WC. `WIP`
+# NEXT Comments WC. `WIP`
 
 >  一个为 NEXT 前端主题打造的评论区 web component
 >
 > A Comment Web Component for NEXT web
+
+## Usage
+
+```bash
+npm i @nx-space/nx-comments-wc
+yarn add @nx-space/nx-comments-wc
+pnpm i @nx-space/nx-comments-wc
+```
+
+### By npm
+
+```ts
+// main.ts
+import '@nx-space/nx-comments-wc';
+```
+
+```html
+<nx-comments></nx-comments>
+```
 
 ## API
 
