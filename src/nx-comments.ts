@@ -1,11 +1,9 @@
 import { html, css, LitElement } from 'lit'
-import { customElement, property } from 'lit/decorators.js'
+import { customElement, property, state } from 'lit/decorators.js'
+import { until } from 'lit/directives/until.js';
 
 /**
- * An example element.
- *
- * @slot - This element has a slot
- * @csspart button - The button
+ * A Comments Component For NEXT WEB Theme
  */
 @customElement('nx-comments')
 export class NxComments extends LitElement {
@@ -15,6 +13,12 @@ export class NxComments extends LitElement {
    */
   @property({ type: String })
   postId: string = "";
+
+  /**
+   * 每页显示的评论数量
+   */
+  @property({ type: Number })
+  pageSize: number = 10;
 
   /**
    * 是否开启 OwO 选择器
@@ -60,7 +64,20 @@ export class NxComments extends LitElement {
 
 
   /**
-   * 随机生成一个验证码
+   * 当前评论列表的页码
+   */
+  @property({ type: Number })
+  page: number = 1
+
+  /**
+   * 当前回复评论的父级评论
+   */
+  @property({ type: String })
+  parent = null as any
+
+
+  /**
+   * 随机生成验证码
    */
   generateCaptcha() {
     return `${Math.floor(Math.random() * this.captchaRange)} + ${Math.floor(Math.random() * this.captchaRange)} = ?`;
@@ -112,6 +129,55 @@ export class NxComments extends LitElement {
     }
   }
 
+  getAvatarFromEmail(email: string) {
+    return `https://cravatar.cn/avatar/${email}?s=86&d=mm&r=g`
+  }
+  
+  returnCommentsItemsAndChildrens(data: any) {
+    return data.forEach((item: any) => {
+      return html`
+        <ol class="nx-comments-list">
+        <li class="nx-comments-list" id="nx-comments-list-${item.id}">
+          <div class="nx-comments-list-body-item" id="nx-comments-item-${item.id}">
+            <div class="nx-comments-list-body-item-avatar">
+            <a href=${data.url} rel="nofollow" target="_blank">
+            <noscript>
+              &lt;img src=${this.getAvatarFromEmail(data.email)} width="42" height="42" class="nx-comments-visitor-avatar" alt="问问"&gt;
+            </noscript>
+              <img src="${this.getAvatarFromEmail(data.email)}" data-src="${this.getAvatarFromEmail(data.email)}" width="42" height="42" class="nx-comments-visitor-avatar" alt="问问">
+            </a>
+            </div>
+            ${item.children.length > 0 && this.returnCommentsItemsAndChildrens(item.children)}
+        </li>
+        </ol>
+      `
+    })
+  }
+
+
+  async PageLessThenTotalPage() {
+    const comments = await this.getComments()
+    return this.page < comments.pagination.total_page
+  }
+
+  @state()
+  private getComments = async () => {
+    return fetch(`${this.apiUrl}/comment/ref/${this.postId}?size=${this.pageSize}&page=${this.page}`)
+      .then(res => {
+        return res.json()
+      })
+      .catch(err => {
+        console.error(err)
+        return
+      })
+  }
+  @state()
+  private commentList = async () => {
+    return await this.getComments().then((res: any) => {
+      return res && res.data && this.returnCommentsItemsAndChildrens(res.data) || html`<li class="nx-comments-list">暂无评论</li>`
+    })
+  }
+
   render() {
     return html`
       <div id="nx-comments" class="nx-comments-wrap" >
@@ -157,18 +223,29 @@ export class NxComments extends LitElement {
           </div>
         </section>
         <ol class="nx-comments-lists">
-
+          ${until(this.commentList(), html`<span>Loading...</span>`)}
         </ol>
-        <div class="nx-comments-pagination">
-
+      <div class= "nx-comments-pagination" >
+        <div class="nx-comments-paging">
+          ${
+            this.page > 1 && html`
+              <a class="nx-comments-paging-prev" @click=${this.changeCommentListPage(this.page - 1)}>上一页</a>
+            `
+          }
+          <a class="nx-comments-paging-now">${console.log(this.page)}</a>
+          <a class="nx-comments-paging-next" @click=${() => {this.page + 1}}>下一页</a>
         </div>
       </div>
-    `
+        `
+  }
+
+  changeCommentListPage(page: number) {
+    this.page = page
   }
 
 
   static styles = css`
-  `
+        `
 }
 
 declare global {
