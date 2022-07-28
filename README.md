@@ -64,6 +64,13 @@ import '@nx-space/nx-comments-wc';
 
 - [Lit](https://github.com/lit/lit/) 
 
+## Reference
+
+This Project refered to: 
+
+- Inspire -- A WordPress Theme
+- [wc-github-corners](https://github.com/YunYouJun/wc-github-corners) -- By YunYouJun
+
 ## License
 
 此项目 AGPLv3 授权开源，使用此项目进行的二次创作或者衍生项目也必须开源。
