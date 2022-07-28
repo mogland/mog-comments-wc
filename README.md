@@ -7,9 +7,23 @@
 ## Usage
 
 ```bash
-npm i @nx-space/nx-comments-wc
-yarn add @nx-space/nx-comments-wc
+# pnpm manager (recommended)
 pnpm i @nx-space/nx-comments-wc
+# npm manager
+npm i @nx-space/nx-comments-wc
+# yarn manager
+yarn add @nx-space/nx-comments-wc
+```
+
+### By CDN
+
+See [demo/index.html](./demo/index.html)
+
+```html
+<!-- jsDelivr CDN -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/@nx-space/nx-comments-wc@latest"></script>
+
+<nx-comments></nx-comments>
 ```
 
 ### By npm
@@ -24,6 +38,12 @@ import '@nx-space/nx-comments-wc';
 ```
 
 ## API
+
+### Example
+
+```html
+<nx-comments owo=true apiUrl="https://api.example.com/api/v1/comments" pageSize=10 page=1 postId=".."></nx-comments>
+```
 
 <!-- wc-api:start -->
 <!-- prettier-ignore-start -->
@@ -59,6 +79,12 @@ import '@nx-space/nx-comments-wc';
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 <!-- wc-api:end -->
+
+## Develop
+
+```bash
+pnpm ci # it can install dependencies with lock file
+```
 
 ## Stack
 
