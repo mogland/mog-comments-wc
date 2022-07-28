@@ -1,7 +1,6 @@
 {
-  "name": "nx-comments-wc",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@nx-space/nx-comments-wc",
+  "version": "0.0.1",
   "type": "module",
   "main": "dist/nx-comments.es.js",
   "exports": {
