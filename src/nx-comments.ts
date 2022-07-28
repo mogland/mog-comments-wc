@@ -12,7 +12,7 @@ export class NxComments extends LitElement {
    * 评论当前文章或页面的id
    */
   @property({ type: String })
-  postId: string = "";
+  postId: string = "62d5235ff357ec0d12b68ea6";
 
   /**
    * 每页显示的评论数量
@@ -48,7 +48,7 @@ export class NxComments extends LitElement {
    * 服务端 API 链接
    */
   @property({ type: String })
-  apiUrl!: string
+  apiUrl: string = 'http://127.0.0.1:3333'
 
   /**
    * 是否需要算数验证（仅前端方面验证）
@@ -136,20 +136,43 @@ export class NxComments extends LitElement {
   returnCommentsItemsAndChildrens(data: any) {
     return data.forEach((item: any) => {
       return html`
-        <ol class="nx-comments-list">
+      <ol class="nx-comments-lists">
         <li class="nx-comments-list" id="nx-comments-list-${item.id}">
           <div class="nx-comments-list-body-item" id="nx-comments-item-${item.id}">
             <div class="nx-comments-list-body-item-avatar">
-            <a href=${data.url} rel="nofollow" target="_blank">
-            <noscript>
-              &lt;img src=${this.getAvatarFromEmail(data.email)} width="42" height="42" class="nx-comments-visitor-avatar" alt="问问"&gt;
-            </noscript>
-              <img src="${this.getAvatarFromEmail(data.email)}" data-src="${this.getAvatarFromEmail(data.email)}" width="42" height="42" class="nx-comments-visitor-avatar" alt="问问">
-            </a>
+            
+              <a href=${item.url} rel="nofollow" target="_blank">
+                <noscript>
+                  &lt;img src=${this.getAvatarFromEmail(item.email)} width="42" height="42" class="nx-comments-visitor-avatar"
+                  alt="${item.author}"&gt;
+                </noscript>
+                <img src="${this.getAvatarFromEmail(item.email)}" data-src="${this.getAvatarFromEmail(item.email)}" width="42"
+                  height="42" class="nx-comments-visitor-avatar" alt="${item.author}">
+              </a>
+            </div>
+
+            <div class="nx-comments-list-body-item-contain-main">
+              <div class="nx-comments-list-body-item-comment-meta">
+
+                <div class="nx-comments-list-body-item-comment-author" itemprop="author">
+                  <a href="${item.url}" rel="nofollow" target="_blank" class="nx-comments-list-body-item-author-name">
+                    ${item.author}
+                  </a>
+                  <span class="nx-comments-list-body-item-comment-reply" style="cursor: pointer;">@TA</span>
+                </div>
+                <time class="nx-comments-list-body-item-comment-time" itemprop="datePublished" datetime="${item.created}">
+                  ${item.created}
+                </time>
+              </div>
+
+              <div class="nx-comments-list-body-item-comment-content" itemprop="description">
+                ${item.text}
+              </div>
             </div>
             ${item.children.length > 0 && this.returnCommentsItemsAndChildrens(item.children)}
+          </div>
         </li>
-        </ol>
+    </ol>
       `
     })
   }
@@ -174,14 +197,14 @@ export class NxComments extends LitElement {
   @state()
   private commentList = async () => {
     return await this.getComments().then((res: any) => {
-      return res && res.data && this.returnCommentsItemsAndChildrens(res.data) || html`<li class="nx-comments-list">暂无评论</li>`
+      return (res && res.data) && this.returnCommentsItemsAndChildrens(res.data) || html``
     })
   }
 
   override render() {
     return html`
       <div id="nx-comments" class="nx-comments-wrap" >
-        <section id="respond" role="form" class="nx-comments-respond">
+        <section id="nx-comments-respond" role="form" class="nx-comments-respond">
           <div class="nx-comments-inner">
 
             <div class="nx-comments-visitor">
@@ -193,7 +216,7 @@ export class NxComments extends LitElement {
             <img src=${this.visitorAvatarUrl} data-src="${this.visitorAvatarUrl}" class="nx-comments-visitor-avatar" alt="visitor-default-avatar" height="42" width="42">
             </div>
 
-            <form action="${this.apiUrl}/comment" method="post" class="nx-comments-form">
+            <form action="${this.apiUrl}/comment" method="post" id="nx-comments-form">
 
               <div class="nx-comments-form-author-info">
                 <input type="text" name="author" id="nx-comments-author" value=${this.getUserCookie("authorName")} placeholder="Your name" required aria-required tabindex="1" size="20">
@@ -210,10 +233,10 @@ export class NxComments extends LitElement {
                   <input type="text" name="nx-comments-comment-validate" id="nx-comments-comment-validate" class="nx-comments-textinput nx-comments-textcenter" value="" size="10" placeholder="${this.generateCaptcha()}">
                 </li>
                 <li class="nx-comments-form-submit-cancel">
-                  <a rel="nofollow" id="nx-comments-cancel-comment-reply-link" href="#nx-comments" style="display:none;">取消</a>
+                  <a rel="nofollow" id="nx-comments-form-botton nx-comments-cancel-comment-reply-link" href="#nx-comments" style="display:none;">取消</a>
                 </li>
                 <li class="nx-comments-form-submit-action">
-                  <button name="submit" type="submit" id="button" class="nx-comments-push-status" tabindex="5">提交</button>
+                  <button name="submit" type="submit" id="nx-comments-push-button" class="nx-comments-form-botton nx-comments-push-status" tabindex="5">提交</button>
                 </li>
                 <input type="hidden" name="nx-comments-comment-post-ID" value="${this.postId}" id="nx-comments-comment-post-ID">
                 <input type="hidden" name="nx-comments-comment-parent" id="nx-comments-comment-parent" value="0">
@@ -222,15 +245,17 @@ export class NxComments extends LitElement {
 
           </div>
         </section>
-        <ol class="nx-comments-lists">
-          ${until(this.commentList(), html`<span>Loading...</span>`)}
-        </ol>
-      <div class= "nx-comments-pagination" >
+      
+      
+        ${until(this.commentList(), html`<span>Loading...</span>`)}
+
+
+      <div class="nx-comments-pagination" >
         <div class="nx-comments-paging">
           ${this.page > 1 && html`
               <a class="nx-comments-paging-prev" @click=${() => { this.changeCommentListPage("prev") }}>上一页</a>
             ` || html``
-          }
+      }
           <a class="nx-comments-paging-now">${this.page}</a>
           <a class="nx-comments-paging-next" @click=${() => { this.changeCommentListPage("next") }}>下一页</a>
         </div>
@@ -240,12 +265,232 @@ export class NxComments extends LitElement {
 
   changeCommentListPage(event: string) {
     event === "prev" ? this.page-- : this.page++
-    // this.dispatchEvent(new CustomEvent("change-comment-list-page")) // dispatchEvent 用于 
+    this.dispatchEvent(new CustomEvent("change-comment-list-page"))
   }
 
 
   static styles = css`
-        `
+  .nx-comments-wrap ol {
+    list-style: none !important;
+  }
+  
+  .nx-comments-wrap li {
+    list-style: none !important;
+  }
+  
+  .nx-comments-wrap {
+    position: relative;
+  }
+  
+  #nx-comments-respond {
+    position: relative;
+    z-index: 1;
+    background-color: #fafafa;
+  }
+  
+  #nx-comments-respond .nx-comments-inner {
+    max-width: 800px;
+    margin: auto;
+    padding: 30px;
+  }
+  
+  .nx-comments-visitor {
+    position: relative;
+    float: left;
+  }
+  
+  .nx-comments-visitor-avatar {
+    height: auto;
+    border-radius: 100%;
+    display: block;
+    object-fit: cover;
+  }
+  
+  #nx-comments-form {
+    margin-left: 50px;
+  }
+  
+  .nx-comments-form-author-info {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  
+  .nx-comments-form-author-info input {
+    float: left;
+    width: 32%;
+    margin-right: 2%;
+  }
+  
+  .nx-comments-form-author-info input#nx-comments-url {
+    float: left;
+    width: 32%;
+    margin-right: 2%;
+  }
+  
+  .nx-comments-form-textarea {
+    position: relative;
+    width: 100%;
+  }
+  
+  .nx-comments-form-textarea textarea {
+    font-size: 13px;
+    line-height: 18px;
+    width: 100%;
+    min-height: 90px;
+    overflow: hidden;
+    transition: all .15s ease-in-out;
+  }
+  
+  #nx-comments-form input,
+  #nx-comments-form textarea {
+    box-shadow: none;
+    border: 1px solid #e1e8ed;
+    border-radius: 20px;
+    box-sizing: border-box;
+    padding: 12px;
+    resize: none;
+    color: #657786;
+  }
+  
+  .nx-comments-form-submit {
+    font-size: 14px;
+    text-align: right;
+  }
+  
+  input#nx-comments-comment-validate {
+    float: left;
+    padding: 7px 8px;
+    text-align: center;
+  }
+  
+  .nx-comments-form-submit-cancel {
+    margin-right: .2em;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  .nx-comments-form-submit-cancel a {
+    padding: 10px 22px;
+    font-size: 15px;
+  }
+  
+  .nx-comments-form-botton {
+    opacity: .8;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    text-align: center;
+    line-height: 1;
+    padding: 10px 14px;
+    margin: 0;
+    display: inline-block;
+    appearance: none;
+    cursor: pointer;
+    border: 0;
+    border-radius: 999em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition-property: all;
+    transition-property: all;
+    -webkit-transition-duration: .3s;
+    transition-duration: .3s;
+    background: linear-gradient(left, rgba(137, 140, 123, 0.99), rgba(137, 140, 123, 0.99) 100%);
+    background: -o-linear-gradient(left, rgba(137, 140, 123, 0.99), rgba(137, 140, 123, 0.99) 100%);
+    background: -ms-linear-gradient(left, rgba(137, 140, 123, 0.99), rgba(137, 140, 123, 0.99) 100%);
+    background: -moz-linear-gradient(left, rgba(137, 140, 123, 0.99), rgba(137, 140, 123, 0.99) 100%);
+    background: -webkit-linear-gradient(left, rgba(137, 140, 123, 0.99), rgba(137, 140, 123, 0.99) 100%);
+  }
+  
+  .nx-comments-form-submit-action {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  
+  #nx-comments-push-button.nx-comments-push-status {
+    padding: 10px 22px;
+    font-size: 15px;
+  }
+  
+  .nx-comments-lists {
+    position: relative;
+  }
+  
+  .nx-comments-list {
+    overflow: hidden;
+    margin-top: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #f5f8fa;
+  }
+  
+  .nx-comments-list-body-item {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 30px;
+  }
+  
+  .nx-comments-list-body-item-avatar {
+    position: relative;
+    z-index: 1;
+    float: left;
+    padding: 8px 0;
+    background-color: #fff;
+  }
+  
+  .nx-comments-list-body-item-contain-main {
+    margin-left: 52px;
+  }
+  
+  .nx-comments-list-body-item-comment-meta {
+    line-height: 1;
+    padding-top: 8px;
+  }
+  
+  .nx-comments-list-body-item-comment-author {
+    font-size: 14px;
+  }
+  
+  .nx-comments-list-body-item-comment-time {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+  }
+  
+  .nx-comments-list-body-item-comment-content {
+    padding: 20px 20px 19px 0;
+    font-size: 13px;
+    color: #111;
+  }
+  
+  .nx-comments-list li:last-child {
+    border: 0;
+  }
+  
+  .nx-comments-pagination {
+    position: relative;
+  }
+  
+  .nx-comments-paging {
+    display: block;
+    padding: 20px 2px;
+    text-align: center;
+    color: #8899a6;
+    border-top: 1px solid #e1e8ed;
+  }
+  
+  .nx-comments-paging-prev,
+  .nx-comments-paging-next {
+    font-size: 14px;
+  }
+  
+  .nx-comments-paging-now {
+    color: #ff007f;
+    font-weight: 600;
+  }
+  `
 }
 
 declare global {

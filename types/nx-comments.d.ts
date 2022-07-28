@@ -68,7 +68,7 @@ export declare class NxComments extends LitElement {
     private getComments;
     private commentList;
     render(): import("lit").TemplateResult<1>;
-    changeCommentListPage(page: number): void;
+    changeCommentListPage(event: string): void;
     static styles: import("lit").CSSResult;
 }
 declare global {
