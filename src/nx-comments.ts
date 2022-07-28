@@ -132,7 +132,7 @@ export class NxComments extends LitElement {
   getAvatarFromEmail(email: string) {
     return `https://cravatar.cn/avatar/${email}?s=86&d=mm&r=g`
   }
-  
+
   returnCommentsItemsAndChildrens(data: any) {
     return data.forEach((item: any) => {
       return html`
@@ -160,7 +160,7 @@ export class NxComments extends LitElement {
     return this.page < comments.pagination.total_page
   }
 
-  @state()
+  // 根据当前页码获取评论
   private getComments = async () => {
     return fetch(`${this.apiUrl}/comment/ref/${this.postId}?size=${this.pageSize}&page=${this.page}`)
       .then(res => {
@@ -178,7 +178,7 @@ export class NxComments extends LitElement {
     })
   }
 
-  render() {
+  override render() {
     return html`
       <div id="nx-comments" class="nx-comments-wrap" >
         <section id="respond" role="form" class="nx-comments-respond">
@@ -227,20 +227,20 @@ export class NxComments extends LitElement {
         </ol>
       <div class= "nx-comments-pagination" >
         <div class="nx-comments-paging">
-          ${
-            this.page > 1 && html`
-              <a class="nx-comments-paging-prev" @click=${this.changeCommentListPage(this.page - 1)}>上一页</a>
-            `
+          ${this.page > 1 && html`
+              <a class="nx-comments-paging-prev" @click=${() => { this.changeCommentListPage("prev") }}>上一页</a>
+            ` || html``
           }
-          <a class="nx-comments-paging-now">${console.log(this.page)}</a>
-          <a class="nx-comments-paging-next" @click=${() => {this.page + 1}}>下一页</a>
+          <a class="nx-comments-paging-now">${this.page}</a>
+          <a class="nx-comments-paging-next" @click=${() => { this.changeCommentListPage("next") }}>下一页</a>
         </div>
       </div>
         `
   }
 
-  changeCommentListPage(page: number) {
-    this.page = page
+  changeCommentListPage(event: string) {
+    event === "prev" ? this.page-- : this.page++
+    // this.dispatchEvent(new CustomEvent("change-comment-list-page")) // dispatchEvent 用于 
   }
 
 
