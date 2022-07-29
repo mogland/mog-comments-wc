@@ -1,12 +1,18 @@
 import { html, css, LitElement } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
 import { until } from 'lit/directives/until.js';
+import md5 from 'md5';
 
 /**
  * A Comments Component For NEXT WEB Theme
  */
 @customElement('nx-comments')
 export class NxComments extends LitElement {
+  /**
+   * email 评论者邮箱
+   */
+  @property({ type: String })
+  private email: string = this.getUserCookie("email") || "";
 
   /**
    * 评论当前文章或页面的id
@@ -42,7 +48,7 @@ export class NxComments extends LitElement {
    * 游客默认头像链接
    */
   @property({ type: String })
-  visitorAvatarUrl?: string = 'https://www.gravatar.com/avatar/?d=identicon'
+  visitorAvatarUrl?: string = `https://www.gravatar.com/avatar/${this.email}?d=identicon`
 
   /**
    * 服务端 API 链接
@@ -128,10 +134,19 @@ export class NxComments extends LitElement {
     }
   }
 
+  /**
+   * getAvatarFromEmail 获取头像链接
+   * @param email 用户邮箱
+   */
   getAvatarFromEmail(email: string) {
     return `https://cravatar.cn/avatar/${email}?s=86&d=mm&r=g`
   }
 
+  /**
+   * returnCommentsItemsAndChildrens 返回评论列表
+   * @param data 评论数据
+   * @param children 是否有子评论
+   */
   returnCommentsItemsAndChildrens(data: any, children: Boolean = false) {
     let res: any = {};
     let result: any = [];
@@ -144,10 +159,10 @@ export class NxComments extends LitElement {
               
                 <a href=${item.url} rel="nofollow" target="_blank">
                   <noscript>
-                    &lt;img src=${this.getAvatarFromEmail(item.email)} width="42" height="42" class="nx-comments-visitor-avatar"
+                    &lt;img src=${this.getAvatarFromEmail(this.email)} width="42" height="42" class="nx-comments-visitor-avatar"
                     alt="${item.author}"&gt;
                   </noscript>
-                  <img src="${this.getAvatarFromEmail(item.email)}" data-src="${this.getAvatarFromEmail(item.email)}" width="42"
+                  <img src="${this.getAvatarFromEmail(this.email)}" data-src="${this.getAvatarFromEmail(this.email)}" width="42"
                     height="42" class="nx-comments-visitor-avatar" alt="${item.author}">
                 </a>
               </div>
@@ -193,7 +208,9 @@ export class NxComments extends LitElement {
     return this.page < comments.pagination.total_page
   }
 
-  // 根据当前页码获取评论
+  /**
+   * getComments 获取评论列表
+   */
   private getComments = async () => {
     return fetch(`${this.apiUrl}/comment/ref/${this.postId}?size=${this.pageSize}&page=${this.page}`)
       .then(res => {
@@ -204,6 +221,10 @@ export class NxComments extends LitElement {
         return
       })
   }
+
+  /**
+   * commentList 评论列表
+   */
   @state()
   private commentList = async () => {
     return await this.getComments().then((res: any) => {
@@ -215,9 +236,15 @@ export class NxComments extends LitElement {
     })
   }
 
-  private commentForm = (actionUrl: string = `/comment`, id?: string) => {
+  /**
+   * commentForm 评论表单
+   * @param actionUrl 评论提交的url
+   * @param id 评论id
+   * @returns 评论表单
+   */
+  private commentForm = (actionUrl: string = `/comment/${this.postId}`, id?: string) => {
     return html`
-    <section id="nx-comments-respond${`-${id}` || ""}" role="form" class="nx-comments-respond" style="${ id ? `display: none;` : "" }">
+    <section id="nx-comments-respond${id ? `-${id}` : ""}" role="form" class="nx-comments-respond" style="${ id ? `display: none;` : "" }">
     <div class="nx-comments-inner">
   
       <div class="nx-comments-visitor">
@@ -226,15 +253,23 @@ export class NxComments extends LitElement {
             <strong>Please enable JavaScript to view the comments.</strong>
           </p>
         </noscript>
-        <img src=${this.visitorAvatarUrl} data-src="${this.visitorAvatarUrl}" class="nx-comments-visitor-avatar"
+        <img src=${this.visitorAvatarUrl} data-src="${this.visitorAvatarUrl}" class="nx-comments-visitor-avatar nx-comments-visitor-author-avatar"
           alt="visitor-default-avatar" height="42" width="42">
       </div>
-      <form action="${this.apiUrl}${actionUrl}" method="post" id="nx-comments-form">
+      <form action="${this.apiUrl}${actionUrl}" method="post" id="nx-comments-form"
+
+      >
   
         <div class="nx-comments-form-author-info">
           <input type="text" name="author" id="nx-comments-author" value=${this.getUserCookie("authorName")}
             placeholder="Your name" required aria-required tabindex="1" size="20">
-          <input type="email" name="email" id="nx-comments-email" value=${this.getUserCookie("authorEmail")}
+          <input type="email" name="email" id="nx-comments-email" value=${this.email}
+            @change=${(e: any) => {
+              this.shadowRoot!.querySelectorAll(".nx-comments-visitor-author-avatar").forEach((item: any) => {
+                console.log(item)
+                item.src = this.getAvatarFromEmail(md5(e.target.value));
+              })
+            }}
             placeholder="Your email" required aria-required tabindex="2" size="20">
           <input type="url" name="url" id="nx-comments-url" value=${this.getUserCookie("authorUrl")}
             placeholder="Your website" tabindex="3" size="20">
@@ -365,6 +400,7 @@ export class NxComments extends LitElement {
     float: left;
     width: 32%;
     margin-right: 2%;
+    margin-bottom: 2%;
   }
   
   .nx-comments-form-author-info input#nx-comments-url {
@@ -399,6 +435,7 @@ export class NxComments extends LitElement {
     -webkit-appearance: none;
     outline: 0;
   }
+
 
   #nx-comments-form input:focus,
   #nx-comments-form textarea:focus {
@@ -526,6 +563,10 @@ export class NxComments extends LitElement {
   .nx-comments-list-body-item-contain-main:hover .nx-comments-list-body-item-comment-reply {
     display: block;
   }
+
+  section[id*="nx-comments-respond-"] {
+    background-color: #fff;
+  }
   
   
   .nx-comments-list-body-item-comment-time {
@@ -589,3 +630,4 @@ declare global {
     'nx-comments': NxComments
   }
 }
+

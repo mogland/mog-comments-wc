@@ -21,11 +21,13 @@
     "docs:gen": "npm run analyze && esno scripts/gen-docs.ts"
   },
   "dependencies": {
-    "lit": "2.2.8"
+    "lit": "2.2.8",
+    "md5": "^2.3.0"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "0.6.3",
     "@custom-elements-manifest/to-markdown": "0.1.0",
+    "@types/md5": "^2.3.2",
     "@types/node": "18.6.1",
     "@yunyoujun/utils": "0.2.3",
     "esno": "*",

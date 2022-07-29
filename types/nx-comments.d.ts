@@ -4,6 +4,10 @@ import { LitElement } from 'lit';
  */
 export declare class NxComments extends LitElement {
     /**
+     * email 评论者邮箱
+     */
+    private email;
+    /**
      * 评论当前文章或页面的id
      */
     postId: string;
@@ -62,13 +66,35 @@ export declare class NxComments extends LitElement {
      * @returns cookie值
      */
     getUserCookie(name: string): any;
+    /**
+     * getAvatarFromEmail 获取头像链接
+     * @param email 用户邮箱
+     */
     getAvatarFromEmail(email: string): string;
-    returnCommentsItemsAndChildrens(data: any): any;
+    /**
+     * returnCommentsItemsAndChildrens 返回评论列表
+     * @param data 评论数据
+     * @param children 是否有子评论
+     */
+    returnCommentsItemsAndChildrens(data: any, children?: Boolean): any;
     PageLessThenTotalPage(): Promise<boolean>;
+    /**
+     * getComments 获取评论列表
+     */
     private getComments;
+    /**
+     * commentList 评论列表
+     */
     private commentList;
+    /**
+     * commentForm 评论表单
+     * @param actionUrl 评论提交的url
+     * @param id 评论id
+     * @returns 评论表单
+     */
+    private commentForm;
     render(): import("lit").TemplateResult<1>;
-    changeCommentListPage(event: string): void;
+    private changeCommentListPage;
     static styles: import("lit").CSSResult;
 }
 declare global {
