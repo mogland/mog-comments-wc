@@ -133,50 +133,53 @@ export class NxComments extends LitElement {
     return `https://cravatar.cn/avatar/${email}?s=86&d=mm&r=g`
   }
 
-  returnCommentsItemsAndChildrens(data: any) {
-    let res: any;
+  returnCommentsItemsAndChildrens(data: any, children: Boolean = false) {
+    let res: any = {};
+    let result: any = [];
     data.forEach((item: any) => {
       res = html`
-      <ol class="nx-comments-lists">
-        <li class="nx-comments-list" id="nx-comments-list-${item.id}">
-          <div class="nx-comments-list-body-item" id="nx-comments-item-${item.id}">
-            <div class="nx-comments-list-body-item-avatar">
-            
-              <a href=${item.url} rel="nofollow" target="_blank">
-                <noscript>
-                  &lt;img src=${this.getAvatarFromEmail(item.email)} width="42" height="42" class="nx-comments-visitor-avatar"
-                  alt="${item.author}"&gt;
-                </noscript>
-                <img src="${this.getAvatarFromEmail(item.email)}" data-src="${this.getAvatarFromEmail(item.email)}" width="42"
-                  height="42" class="nx-comments-visitor-avatar" alt="${item.author}">
-              </a>
-            </div>
+      <ol class="nx-comments-list ${children ? "nx-comments-list-children" : ""}" id="nx-comments-list-${item.id}">
+          <li id="nx-comments-item-li-${item.id}" class="nx-comments-item">
+            <div class="nx-comments-list-body-item" id="nx-comments-item-${item.id}">
+              <div class="nx-comments-list-body-item-avatar">
+              
+                <a href=${item.url} rel="nofollow" target="_blank">
+                  <noscript>
+                    &lt;img src=${this.getAvatarFromEmail(item.email)} width="42" height="42" class="nx-comments-visitor-avatar"
+                    alt="${item.author}"&gt;
+                  </noscript>
+                  <img src="${this.getAvatarFromEmail(item.email)}" data-src="${this.getAvatarFromEmail(item.email)}" width="42"
+                    height="42" class="nx-comments-visitor-avatar" alt="${item.author}">
+                </a>
+              </div>
 
-            <div class="nx-comments-list-body-item-contain-main">
-              <div class="nx-comments-list-body-item-comment-meta">
+              <div class="nx-comments-list-body-item-contain-main">
+                <div class="nx-comments-list-body-item-comment-meta">
 
-                <div class="nx-comments-list-body-item-comment-author" itemprop="author">
-                  <a href="${item.url}" rel="nofollow" target="_blank" class="nx-comments-list-body-item-author-name">
-                    ${item.author}
-                  </a>
-                  <span class="nx-comments-list-body-item-comment-reply" style="cursor: pointer;">@TA</span>
+                  <div class="nx-comments-list-body-item-comment-author" itemprop="author">
+                    <a href="${item.url}" rel="nofollow" target="_blank" class="nx-comments-list-body-item-author-name">
+                      ${item.author}
+                    </a>
+                    <span class="nx-comments-list-body-item-comment-reply" style="cursor: pointer;">@TA</span>
+                  </div>
+                  <time class="nx-comments-list-body-item-comment-time" itemprop="datePublished" datetime="${item.created}">
+                    ${item.created}
+                  </time>
                 </div>
-                <time class="nx-comments-list-body-item-comment-time" itemprop="datePublished" datetime="${item.created}">
-                  ${item.created}
-                </time>
+
+                <div class="nx-comments-list-body-item-comment-content" itemprop="description">
+                  ${item.text}
+                </div>
               </div>
 
-              <div class="nx-comments-list-body-item-comment-content" itemprop="description">
-                ${item.text}
-              </div>
+            ${item.children.length > 0 && this.returnCommentsItemsAndChildrens(item.children, true) || ``}
             </div>
-            ${item.children.length > 0 && this.returnCommentsItemsAndChildrens(item.children) || ``}
-          </div>
-        </li>
-    </ol>
+          </li>
+        </ol>
       `
+      result = result.concat(res);
     });
-    return res;
+    return data.length ? result : ``;
   }
 
 
@@ -199,7 +202,11 @@ export class NxComments extends LitElement {
   @state()
   private commentList = async () => {
     return await this.getComments().then((res: any) => {
-      return (res && res.data) && this.returnCommentsItemsAndChildrens(res.data) || html``
+      return (res && res.data) && (
+        html`<ol class="nx-comments-lists">
+          ${this.returnCommentsItemsAndChildrens(res.data)}
+        </ol>`
+      ) || html``
     })
   }
 
@@ -443,7 +450,7 @@ export class NxComments extends LitElement {
     position: relative;
   }
   
-  .nx-comments-list {
+  .nx-comments-item {
     overflow: hidden;
     margin-top: 30px;
     padding-bottom: 20px;
@@ -454,7 +461,7 @@ export class NxComments extends LitElement {
     position: relative;
     max-width: 800px;
     margin: 0 auto;
-    padding: 0 30px;
+    // padding: 0 30px;
   }
   
   .nx-comments-list-body-item-avatar {
@@ -497,7 +504,7 @@ export class NxComments extends LitElement {
     background: #898c7b; 
   }
 
-  .nx-comments-list-body-item:hover .nx-comments-list-body-item-comment-reply {
+  .nx-comments-list-body-item-contain-main:hover .nx-comments-list-body-item-comment-reply {
     display: block;
   }
   
@@ -514,9 +521,24 @@ export class NxComments extends LitElement {
     font-size: 13px;
     color: #111;
   }
+
+  .nx-comments-list ol, .nx-comments-list li {
+    padding: 0;
+  }
   
-  .nx-comments-list li:last-child {
+  .nx-comments-list-children li {
     border: 0;
+  }
+
+  .nx-comments-list .nx-comments-list-body-item::before {
+      content: "";
+      width: 2px;
+      background: rgb(137, 140, 123);
+      left: 18px;
+      height: 500%;
+      padding-bottom: 10px;
+      top: -100%;
+      position: absolute;
   }
   
   .nx-comments-pagination {
