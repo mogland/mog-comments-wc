@@ -75,7 +75,6 @@ export class NxComments extends LitElement {
   @property({ type: String })
   parent = null as any
 
-
   /**
    * 随机生成验证码
    */
@@ -160,7 +159,10 @@ export class NxComments extends LitElement {
                     <a href="${item.url}" rel="nofollow" target="_blank" class="nx-comments-list-body-item-author-name">
                       ${item.author}
                     </a>
-                    <span class="nx-comments-list-body-item-comment-reply" style="cursor: pointer;">@TA</span>
+                    <span class="nx-comments-list-body-item-comment-reply" style="cursor: pointer;" @click=${() => {
+                      // 从shadow dom中获取评论列表
+                      this.shadowRoot!.getElementById(`nx-comments-respond-${item.id}`)!.style.display = "block";
+                    }}>@TA</span>
                   </div>
                   <time class="nx-comments-list-body-item-comment-time" itemprop="datePublished" datetime="${item.created}">
                     ${item.created}
@@ -171,10 +173,13 @@ export class NxComments extends LitElement {
                   ${item.text}
                 </div>
               </div>
-
+              ${
+                this.commentForm(`/comment/reply/${item.id}`, item.id)
+              }
             ${item.children.length > 0 && this.returnCommentsItemsAndChildrens(item.children, true) || ``}
             </div>
           </li>
+          
         </ol>
       `
       result = result.concat(res);
@@ -210,51 +215,66 @@ export class NxComments extends LitElement {
     })
   }
 
+  private commentForm = (actionUrl: string = `/comment`, id?: string) => {
+    return html`
+    <section id="nx-comments-respond${`-${id}` || ""}" role="form" class="nx-comments-respond" style="${ id ? `display: none;` : "" }">
+    <div class="nx-comments-inner">
+  
+      <div class="nx-comments-visitor">
+        <noscript>
+          <p class="nx-comments-visitor-message">
+            <strong>Please enable JavaScript to view the comments.</strong>
+          </p>
+        </noscript>
+        <img src=${this.visitorAvatarUrl} data-src="${this.visitorAvatarUrl}" class="nx-comments-visitor-avatar"
+          alt="visitor-default-avatar" height="42" width="42">
+      </div>
+      <form action="${this.apiUrl}${actionUrl}" method="post" id="nx-comments-form">
+  
+        <div class="nx-comments-form-author-info">
+          <input type="text" name="author" id="nx-comments-author" value=${this.getUserCookie("authorName")}
+            placeholder="Your name" required aria-required tabindex="1" size="20">
+          <input type="email" name="email" id="nx-comments-email" value=${this.getUserCookie("authorEmail")}
+            placeholder="Your email" required aria-required tabindex="2" size="20">
+          <input type="url" name="url" id="nx-comments-url" value=${this.getUserCookie("authorUrl")}
+            placeholder="Your website" tabindex="3" size="20">
+        </div>
+  
+        <div class="nx-comments-form-textarea">
+          <textarea id="nx-comments-commentarea" class="" name="comment" cols="45" rows="1" maxlength="65525"
+            aria-required="true" required="required" tabindex="4" placeholder="Write your comment here..."></textarea>
+        </div>
+  
+        <ul class="nx-comments-form-submit">
+          <li class="nx-comments-form-captcha" style="${!this.needCaptcha && " display:none"}">
+            <input type="text" name="nx-comments-comment-validate" id="nx-comments-comment-validate"
+              class="nx-comments-textinput nx-comments-textcenter" value="" size="10"
+              placeholder="${this.generateCaptcha()}">
+          </li>
+          <li class="nx-comments-form-submit-cancel">
+            <a rel="nofollow" id="nx-comments-cancel-comment-reply-link" class="nx-comments-form-botton"  href="#nx-comments"
+              style="${id ? "" : "display:none;"}" @click=${() => {
+                this.shadowRoot!.getElementById(`nx-comments-respond-${id}`)!.style.display = "none";
+              }}>取消</a>
+          </li>
+          <li class="nx-comments-form-submit-action">
+            <button name="submit" type="submit" id="nx-comments-push-button"
+              class="nx-comments-form-botton nx-comments-push-status" tabindex="5">提交</button>
+          </li>
+          <input type="hidden" name="nx-comments-comment-post-ID" value="${this.postId}" id="nx-comments-comment-post-ID">
+          <input type="hidden" name="nx-comments-comment-parent" id="nx-comments-comment-parent" value="0">
+        </ul>
+      </form>
+    </div>
+  </section>
+    `
+  }
+
   override render() {
     return html`
       <div id="nx-comments" class="nx-comments-wrap" >
-        <section id="nx-comments-respond" role="form" class="nx-comments-respond">
-          <div class="nx-comments-inner">
 
-            <div class="nx-comments-visitor">
-            <noscript>
-              <p class="nx-comments-visitor-message">
-                <strong>Please enable JavaScript to view the comments.</strong>
-              </p>
-            </noscript>
-            <img src=${this.visitorAvatarUrl} data-src="${this.visitorAvatarUrl}" class="nx-comments-visitor-avatar" alt="visitor-default-avatar" height="42" width="42">
-            </div>
-
-            <form action="${this.apiUrl}/comment" method="post" id="nx-comments-form">
-
-              <div class="nx-comments-form-author-info">
-                <input type="text" name="author" id="nx-comments-author" value=${this.getUserCookie("authorName")} placeholder="Your name" required aria-required tabindex="1" size="20">
-                <input type="email" name="email" id="nx-comments-email" value=${this.getUserCookie("authorEmail")} placeholder="Your email" required aria-required tabindex="2" size="20">
-                <input type="url" name="url" id="nx-comments-url" value=${this.getUserCookie("authorUrl")} placeholder="Your website" tabindex="3" size="20">
-              </div>
-
-              <div class="nx-comments-form-textarea">
-              <textarea id="nx-comments-commentarea" class="" name="comment" cols="45" rows="1" maxlength="65525" aria-required="true" required="required" tabindex="4" placeholder="Write your comment here..."></textarea>
-              </div>
-
-              <ul class="nx-comments-form-submit">
-                <li class="nx-comments-form-captcha" style="${!this.needCaptcha && "display:none"}">
-                  <input type="text" name="nx-comments-comment-validate" id="nx-comments-comment-validate" class="nx-comments-textinput nx-comments-textcenter" value="" size="10" placeholder="${this.generateCaptcha()}">
-                </li>
-                <li class="nx-comments-form-submit-cancel">
-                  <a rel="nofollow" id="nx-comments-form-botton nx-comments-cancel-comment-reply-link" href="#nx-comments" style="display:none;">取消</a>
-                </li>
-                <li class="nx-comments-form-submit-action">
-                  <button name="submit" type="submit" id="nx-comments-push-button" class="nx-comments-form-botton nx-comments-push-status" tabindex="5">提交</button>
-                </li>
-                <input type="hidden" name="nx-comments-comment-post-ID" value="${this.postId}" id="nx-comments-comment-post-ID">
-                <input type="hidden" name="nx-comments-comment-parent" id="nx-comments-comment-parent" value="0">
-              </ul>
-            </form>
-
-          </div>
-        </section>
-      
+            ${this.commentForm()}
       
         ${until(this.commentList(), html`<span>Loading...</span>`)}
 
@@ -264,7 +284,7 @@ export class NxComments extends LitElement {
           ${this.page > 1 && html`
               <a class="nx-comments-paging-prev" @click=${() => { this.changeCommentListPage("prev") }}>上一页</a>
             ` || html``
-      }
+          }
           <a class="nx-comments-paging-now">${this.page}</a>
           <a class="nx-comments-paging-next" @click=${() => { this.changeCommentListPage("next") }}>下一页</a>
         </div>
@@ -272,11 +292,10 @@ export class NxComments extends LitElement {
         `
   }
 
-  changeCommentListPage(event: string) {
+  private changeCommentListPage(event: string) {
     event === "prev" ? this.page-- : this.page++
     this.dispatchEvent(new CustomEvent("change-comment-list-page"))
   }
-
 
   static styles = css`
 
@@ -307,13 +326,13 @@ export class NxComments extends LitElement {
     position: relative;
   }
   
-  #nx-comments-respond {
+  .nx-comments-respond {
     position: relative;
     z-index: 1;
     background-color: #fafafa;
   }
   
-  #nx-comments-respond .nx-comments-inner {
+  .nx-comments-respond .nx-comments-inner {
     max-width: 800px;
     margin: auto;
     padding: 30px;
@@ -461,7 +480,7 @@ export class NxComments extends LitElement {
     position: relative;
     max-width: 800px;
     margin: 0 auto;
-    // padding: 0 30px;
+    padding: 0 30px;
   }
   
   .nx-comments-list-body-item-avatar {
@@ -531,7 +550,7 @@ export class NxComments extends LitElement {
   }
 
   .nx-comments-list .nx-comments-list-body-item::before {
-      content: "";
+      // content: "";
       width: 2px;
       background: rgb(137, 140, 123);
       left: 18px;
