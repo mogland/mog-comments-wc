@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@custom-elements-manifest/analyzer': 0.6.3
   '@custom-elements-manifest/to-markdown': 0.1.0
+  '@lit-labs/motion': ^1.0.3
   '@types/md5': ^2.3.2
   '@types/node': 18.6.1
   '@yunyoujun/utils': 0.2.3
@@ -16,6 +17,7 @@ specifiers:
   vite: 3.0.3
 
 dependencies:
+  '@lit-labs/motion': 1.0.3
   lit: 2.2.8
   md5: 2.3.0
 
@@ -89,6 +91,12 @@ packages:
       '@esbuild-kit/core-utils': 2.1.0
       get-tsconfig: 4.2.0
     dev: true
+
+  /@lit-labs/motion/1.0.3:
+    resolution: {integrity: sha512-y62SxlUTeFtoQTS8/KqAnOnOTdm0FpB23PgFFc99lPj9T5Gg0uktzRmmmqxPaGoNeRg2cLcPpbvK8iEo8CWMoQ==}
+    dependencies:
+      lit: 2.2.8
+    dev: false
 
   /@lit/reactive-element/1.3.4:
     resolution: {integrity: sha512-I1wz4uxOA52zSBhKmv4KQWLJpCyvfpnDg+eQR6mjpRgV+Ldi14HLPpSUpJklZRldz0fFmGCC/kVmuc/3cPFqCg==}

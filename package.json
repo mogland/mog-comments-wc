@@ -21,6 +21,7 @@
     "docs:gen": "npm run analyze && esno scripts/gen-docs.ts"
   },
   "dependencies": {
+    "@lit-labs/motion": "^1.0.3",
     "lit": "2.2.8",
     "md5": "^2.3.0"
   },

@@ -1,3 +1,4 @@
+import { animate } from '@lit-labs/motion';
 import { html, css, LitElement } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
 import { until } from 'lit/directives/until.js';
@@ -8,6 +9,7 @@ import md5 from 'md5';
  */
 @customElement('nx-comments')
 export class NxComments extends LitElement {
+
   /**
    * email 评论者邮箱
    */
@@ -80,6 +82,14 @@ export class NxComments extends LitElement {
    */
   @property({ type: String })
   parent = null as any
+
+  messagePoput = (message: string) => {
+    this.shadowRoot!.querySelector("#nx-comments-message-poput-content-inner")!.innerHTML = message
+    this.shadowRoot!.getElementById("#nx-comments-message-poput-content")!.style.display = "block";
+    // setTimeout(() => {
+    //   this.shadowRoot!.getElementById("#nx-comments-message-poput-content")!.style.display = "none";
+    // })
+  }
 
   /**
    * 随机生成验证码
@@ -257,7 +267,28 @@ export class NxComments extends LitElement {
           alt="visitor-default-avatar" height="42" width="42">
       </div>
       <form action="${this.apiUrl}${actionUrl}" method="post" id="nx-comments-form"
-
+      @submit=${(e: any) => {
+        e.preventDefault();
+        console.log(e);
+        fetch(`${this.apiUrl}${actionUrl}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+          })
+        }).then(res => {
+          this.messagePoput("评论成功");
+          return res.json()
+        }).catch(err => {
+          console.error(err)
+          this.messagePoput(err.message)
+          return 
+        }).finally(() => {
+          this.page = 1;
+          this.commentList();
+        })
+      }}
       >
   
         <div class="nx-comments-form-author-info">
@@ -265,6 +296,7 @@ export class NxComments extends LitElement {
             placeholder="Your name" required aria-required tabindex="1" size="20">
           <input type="email" name="email" id="nx-comments-email" value=${this.email}
             @change=${(e: any) => {
+              this.email = e.target.value;
               this.shadowRoot!.querySelectorAll(".nx-comments-visitor-author-avatar").forEach((item: any) => {
                 console.log(item)
                 item.src = this.getAvatarFromEmail(md5(e.target.value));
@@ -307,6 +339,35 @@ export class NxComments extends LitElement {
 
   override render() {
     return html`
+      <div class="nx-comments-message-poput">
+        <div class="nx-comments-message-poput-inner">
+          <div 
+            class="nx-comments-message-poput-content" 
+            id="nx-comments-message-poput-content"
+
+            ${animate({
+              in: [
+                {
+                  opacity: 0,
+                  transform: "translateY(-100%)"
+                },
+                {
+                  opacity: 0.5,
+                  transform: "translateY(50%)"
+                },
+                {
+                  opacity: 1,
+                  transform: "translateY(0)"
+                }
+              ],
+            })}
+          >
+            <div class="nx-comments-message-poput-content-inner" id="nx-comments-message-poput-content-inner">
+              
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="nx-comments" class="nx-comments-wrap" >
 
             ${this.commentForm()}
@@ -621,6 +682,44 @@ export class NxComments extends LitElement {
   .nx-comments-paging-now {
     color: #ff007f;
     font-weight: 600;
+  }
+
+
+  .nx-comments-message-poput {
+    position: fixed;
+    right: 0;
+    top: 8px;
+    left: 0;
+    z-index: 999;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+    display: block;
+    margin: 12px auto;
+    text-align: center;
+    line-height: 1.5;
+    max-width: 80vw;
+  }
+
+  .nx-comments-message-poput-content {
+    border-radius: 2em;
+    padding: 10px 16px;
+    box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d;
+    position: relative;
+    background-color: #fff;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .nx-comments-message-poput-content-inner {
+    display: inline-block;
+    color: #333;
+    padding-left: 12px;
+    padding-right: 12px;
+    word-break: break-all;
+    text-align: left;
   }
   `
 }
