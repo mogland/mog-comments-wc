@@ -134,8 +134,9 @@ export class NxComments extends LitElement {
   }
 
   returnCommentsItemsAndChildrens(data: any) {
-    return data.forEach((item: any) => {
-      return html`
+    let res: any;
+    data.forEach((item: any) => {
+      res = html`
       <ol class="nx-comments-lists">
         <li class="nx-comments-list" id="nx-comments-list-${item.id}">
           <div class="nx-comments-list-body-item" id="nx-comments-item-${item.id}">
@@ -169,12 +170,13 @@ export class NxComments extends LitElement {
                 ${item.text}
               </div>
             </div>
-            ${item.children.length > 0 && this.returnCommentsItemsAndChildrens(item.children)}
+            ${item.children.length > 0 && this.returnCommentsItemsAndChildrens(item.children) || ``}
           </div>
         </li>
     </ol>
       `
-    })
+    });
+    return res;
   }
 
 
@@ -270,10 +272,26 @@ export class NxComments extends LitElement {
 
 
   static styles = css`
+
+  .nx-comments-wrap {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", STHeiti, "WenQuanYi Micro Hei", Helvetica, Arial, sans-serif;
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 500;
+  }
+
   .nx-comments-wrap ol {
     list-style: none !important;
   }
-  
+
+  .nx-comments-wrap a {
+    text-decoration: none !important;
+  }
+
+  .nx-comments-wrap a:hover {
+    outline: 0 !important;
+    text-decoration: none !important;
+  }
   .nx-comments-wrap li {
     list-style: none !important;
   }
@@ -352,6 +370,13 @@ export class NxComments extends LitElement {
     padding: 12px;
     resize: none;
     color: #657786;
+    -webkit-appearance: none;
+    outline: 0;
+  }
+
+  #nx-comments-form input:focus,
+  #nx-comments-form textarea:focus {
+    border-color: #ccc;
   }
   
   .nx-comments-form-submit {
@@ -452,11 +477,36 @@ export class NxComments extends LitElement {
   .nx-comments-list-body-item-comment-author {
     font-size: 14px;
   }
+
+  .nx-comments-list-body-item-author-name {
+    color: #000;
+    outline: 0;
+  }
+
+  .nx-comments-list-body-item-comment-reply {
+    display: none;
+    cursor: pointer;
+    float: right;
+    transition: all .2s ease-in-out !important;
+    font-size: 12px;
+    color: #fff;
+    padding: 1px 5px;
+    border-radius: 3px;
+    line-height: 1.5;
+    background: #898c7b;
+    background: #898c7b; 
+  }
+
+  .nx-comments-list-body-item:hover .nx-comments-list-body-item-comment-reply {
+    display: block;
+  }
+  
   
   .nx-comments-list-body-item-comment-time {
     display: block;
     margin-top: 4px;
     font-size: 12px;
+    color: #657786;
   }
   
   .nx-comments-list-body-item-comment-content {
