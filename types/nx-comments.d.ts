@@ -3,6 +3,7 @@ import { LitElement } from 'lit';
  * A Comments Component For NEXT WEB Theme
  */
 export declare class NxComments extends LitElement {
+    private animateController;
     /**
      * email 评论者邮箱
      */
@@ -51,6 +52,11 @@ export declare class NxComments extends LitElement {
      * 当前回复评论的父级评论
      */
     parent: any;
+    /**
+     * messagePoput 信息弹窗
+     * @param message 信息内容
+     */
+    private messagePoput;
     /**
      * 随机生成验证码
      */

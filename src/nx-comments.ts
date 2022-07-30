@@ -87,7 +87,11 @@ export class NxComments extends LitElement {
   @property({ type: String })
   parent = null as any
 
-  messagePoput = (message: string) => {
+  /**
+   * messagePopup 信息弹窗
+   * @param message 信息内容
+   */
+  private messagePopup = (message: string) => {
     this.shadowRoot!.querySelector("#nx-comments-message-poput-content-inner")!.innerHTML = message
     // this.shadowRoot!.getElementById("#nx-comments-message-poput-content")!.style.display = "block";
     this.animateController.play();
@@ -304,14 +308,14 @@ export class NxComments extends LitElement {
           if (res.status !== 201) {
             throw new Error("评论失败，请前往控制台了解更多");
           }
-          this.messagePoput("评论成功，刷新页面后即可查看～");
+          this.messagePopup("评论成功，刷新页面后即可查看～");
           // 清除表单
           const form = this.shadowRoot!.getElementById("nx-comments-form") as any
           form.reset()
           return res.json()
         }).catch(err => {
           console.error(err)
-          this.messagePoput(err.message)
+          this.messagePopup(err.message)
           return 
         }).finally(() => {
           this.page = 1;
