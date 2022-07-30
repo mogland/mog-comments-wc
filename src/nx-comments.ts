@@ -268,6 +268,10 @@ export class NxComments extends LitElement {
       </div>
       <form action="${this.apiUrl}${actionUrl}" method="post" id="nx-comments-form"
       @submit=${(e: any) => {
+        const authorEle = this.shadowRoot!.getElementById("nx-comments-author") as any;
+        const emailEle = this.shadowRoot!.getElementById("nx-comments-email") as any;
+        const urlEle = this.shadowRoot!.getElementById("nx-comments-url") as any;
+        const commentareaEle = this.shadowRoot!.getElementById("nx-comments-commentarea") as any;
         e.preventDefault();
         console.log(e);
         fetch(`${this.apiUrl}${actionUrl}`, {
@@ -276,6 +280,11 @@ export class NxComments extends LitElement {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
+            // author 的值是在 id="nx-comments-author" 的input标签中获取的
+            author: authorEle.value,
+            mail: emailEle.value,
+            url: urlEle.value,
+            text: commentareaEle.value,
           })
         }).then(res => {
           this.messagePoput("评论成功");
@@ -293,6 +302,11 @@ export class NxComments extends LitElement {
   
         <div class="nx-comments-form-author-info">
           <input type="text" name="author" id="nx-comments-author" value=${this.getUserCookie("authorName")}
+          @change=${(e: any) => {
+            this.shadowRoot!.querySelectorAll("#nx-comments-author").forEach((ele: any) => {
+              ele.value = e.target.value;
+            })
+          }}
             placeholder="Your name" required aria-required tabindex="1" size="20">
           <input type="email" name="email" id="nx-comments-email" value=${this.email}
             @change=${(e: any) => {
@@ -306,11 +320,21 @@ export class NxComments extends LitElement {
             }}
             placeholder="Your email" required aria-required tabindex="2" size="20">
           <input type="url" name="url" id="nx-comments-url" value=${this.getUserCookie("authorUrl")}
+          @change=${(e: any) => {
+            this.shadowRoot!.querySelectorAll("#nx-comments-url").forEach((ele: any) => {
+              ele.value = e.target.value;
+            })
+          }}
             placeholder="Your website" tabindex="3" size="20">
         </div>
   
         <div class="nx-comments-form-textarea">
           <textarea id="nx-comments-commentarea" class="" name="comment" cols="45" rows="1" maxlength="65525"
+           
+          @change=${(e: any) => {
+            this.shadowRoot!.querySelectorAll("#nx-comments-commentarea").forEach((ele: any) => {
+              ele.value = e.target.value;
+            })}}
             aria-required="true" required="required" tabindex="4" placeholder="Write your comment here..."></textarea>
         </div>
   
