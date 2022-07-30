@@ -296,7 +296,9 @@ export class NxComments extends LitElement {
             placeholder="Your name" required aria-required tabindex="1" size="20">
           <input type="email" name="email" id="nx-comments-email" value=${this.email}
             @change=${(e: any) => {
-              this.email = e.target.value;
+              this.shadowRoot?.querySelectorAll("#nx-comments-email").forEach((item: any) => {
+                item.value = e.target.value;
+              })
               this.shadowRoot!.querySelectorAll(".nx-comments-visitor-author-avatar").forEach((item: any) => {
                 console.log(item)
                 item.src = this.getAvatarFromEmail(md5(e.target.value));
