@@ -53,10 +53,10 @@ export declare class NxComments extends LitElement {
      */
     parent: any;
     /**
-     * messagePoput 信息弹窗
+     * messagePopup 信息弹窗
      * @param message 信息内容
      */
-    private messagePoput;
+    private messagePopup;
     /**
      * 随机生成验证码
      */
