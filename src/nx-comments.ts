@@ -1,4 +1,4 @@
-import { animate } from '@lit-labs/motion';
+import { animate, AnimateController } from '@lit-labs/motion';
 import { html, css, LitElement } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
 import { until } from 'lit/directives/until.js';
@@ -9,6 +9,10 @@ import md5 from 'md5';
  */
 @customElement('nx-comments')
 export class NxComments extends LitElement {
+
+  private animateController = new AnimateController(this, {
+    startPaused: true, // 初始化时是否暂停
+  })
 
   /**
    * email 评论者邮箱
@@ -50,7 +54,7 @@ export class NxComments extends LitElement {
    * 游客默认头像链接
    */
   @property({ type: String })
-  visitorAvatarUrl?: string = `https://www.gravatar.com/avatar/${this.email}?d=identicon`
+  visitorAvatarUrl?: string = `https://cravatar.cn/avatar/${this.email}?s=86&d=mm&r=g`
 
   /**
    * 服务端 API 链接
@@ -85,10 +89,14 @@ export class NxComments extends LitElement {
 
   messagePoput = (message: string) => {
     this.shadowRoot!.querySelector("#nx-comments-message-poput-content-inner")!.innerHTML = message
-    this.shadowRoot!.getElementById("#nx-comments-message-poput-content")!.style.display = "block";
+    // this.shadowRoot!.getElementById("#nx-comments-message-poput-content")!.style.display = "block";
+    this.animateController.play();
     // setTimeout(() => {
-    //   this.shadowRoot!.getElementById("#nx-comments-message-poput-content")!.style.display = "none";
-    // })
+    //   console.log("hide")
+    //   this.animateController.disabled = true;
+    //   this.animateController.cancel();
+    //   console.log(this.animateController)
+    // }, 3000);
   }
 
   /**
@@ -273,7 +281,12 @@ export class NxComments extends LitElement {
         const urlEle = this.shadowRoot!.getElementById("nx-comments-url") as any;
         const commentareaEle = this.shadowRoot!.getElementById("nx-comments-commentarea") as any;
         e.preventDefault();
-        console.log(e);
+        // console.log({
+        //   author: authorEle.value,
+        //   email: emailEle.value,
+        //   url: urlEle.value,
+        //   text: commentareaEle.value,
+        // });
         fetch(`${this.apiUrl}${actionUrl}`, {
           method: "POST",
           headers: {
@@ -287,7 +300,14 @@ export class NxComments extends LitElement {
             text: commentareaEle.value,
           })
         }).then(res => {
-          this.messagePoput("评论成功");
+          // 如果非302或200，则抛出错误
+          if (res.status !== 201) {
+            throw new Error("评论失败，请前往控制台了解更多");
+          }
+          this.messagePoput("评论成功，刷新页面后即可查看～");
+          // 清除表单
+          const form = this.shadowRoot!.getElementById("nx-comments-form") as any
+          form.reset()
           return res.json()
         }).catch(err => {
           console.error(err)
@@ -314,7 +334,6 @@ export class NxComments extends LitElement {
                 item.value = e.target.value;
               })
               this.shadowRoot!.querySelectorAll(".nx-comments-visitor-author-avatar").forEach((item: any) => {
-                console.log(item)
                 item.src = this.getAvatarFromEmail(md5(e.target.value));
               })
             }}
