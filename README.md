@@ -1,8 +1,10 @@
-# NEXT Comments WC. `WIP`
+# NEXT Comments WC. V0.1.0
 
 >  一个为 NEXT 前端主题打造的评论区 web component
 >
 > A Comment Web Component for NEXT web
+
+<img src="https://img.shields.io/github/package-json/v/nx-space/nx-comments-wc" referrerpolicy="no-referrer" alt="version"><a href="https://wakatime.com/badge/user/5c293fcd-9bec-4609-946b-c06b5fbf192c/project/5d18f975-b56c-4884-83ab-84e46a3a76cb"><img src="https://wakatime.com/badge/user/5c293fcd-9bec-4609-946b-c06b5fbf192c/project/5d18f975-b56c-4884-83ab-84e46a3a76cb.svg" alt="wakatime"></a>
 
 ## Usage
 
