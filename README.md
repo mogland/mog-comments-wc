@@ -1,6 +1,6 @@
-# NEXT Comments WC. V0.1.0
+# Mog Comments WC. V0.1.0
 
->  一个为 NEXT 前端主题打造的评论区 web component
+>  一个为 Mog 前端主题打造的评论区 web component
 >
 > A Comment Web Component for NEXT web
 
@@ -115,7 +115,7 @@ This Project refered to:
 
 ## Author
 
-nx-space © Wibus, Released under the AGPL-3.0 License. Created on 2022-7-27
+MogLand © Wibus, Released under the AGPL-3.0 License. Created on 2022-7-27
 
 > [Personal Website](http://iucky.cn/) · [Blog](https://blog.iucky.cn/) · GitHub [@wibus-wee](https://github.com/wibus-wee/) · Telegram [@wibus✪](https://t.me/wibus_wee)
 
