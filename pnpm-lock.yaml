@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@custom-elements-manifest/analyzer': 0.6.3
+  '@custom-elements-manifest/analyzer': 0.6.6
   '@custom-elements-manifest/to-markdown': 0.1.0
   '@lit-labs/motion': ^1.0.3
   '@nx-space/nx-comments-wc': ^0.1.0
@@ -24,7 +24,7 @@ dependencies:
   md5: 2.3.0
 
 devDependencies:
-  '@custom-elements-manifest/analyzer': 0.6.3
+  '@custom-elements-manifest/analyzer': 0.6.6
   '@custom-elements-manifest/to-markdown': 0.1.0
   '@types/md5': 2.3.2
   '@types/node': 18.6.1
@@ -38,11 +38,12 @@ devDependencies:
 
 packages:
 
-  /@custom-elements-manifest/analyzer/0.6.3:
-    resolution: {integrity: sha512-Ao7nFsBodH+xJFpDO9Ducsil6fF9rHLye4CZCr5JgjItIgie8k3GO8Jb4SJAg2FAGR5exSDHPN1Sk2ElCW2D4g==}
+  /@custom-elements-manifest/analyzer/0.6.6:
+    resolution: {integrity: sha512-aPBZBdkrGcQPhgPPEucgw66vfOfLpS80GOGzDXE8NZuO/VmTdy3QQNAsuD4MPJmv9eRPV9W2V7ezodS5g8erng==}
     hasBin: true
     dependencies:
       '@custom-elements-manifest/find-dependencies': 0.0.5
+      '@github/catalyst': 1.6.0
       '@web/config-loader': 0.1.3
       chokidar: 3.5.2
       command-line-args: 5.1.2
@@ -92,6 +93,10 @@ packages:
     dependencies:
       '@esbuild-kit/core-utils': 2.1.0
       get-tsconfig: 4.2.0
+    dev: true
+
+  /@github/catalyst/1.6.0:
+    resolution: {integrity: sha512-u8A+DameixqpeyHzvnJWTGj+wfiskQOYHzSiJscCWVfMkIT3rxnbHMtGh3lMthaRY21nbUOK71WcsCnCrXhBJQ==}
     dev: true
 
   /@lit-labs/motion/1.0.3:
@@ -1434,6 +1439,7 @@ packages:
   /unified/9.2.2:
     resolution: {integrity: sha512-Sg7j110mtefBD+qunSLO1lqOEKdrwBFBrR6Qd8f4uwkhWNlbkaqwHse6e7QvD3AP/MNoJdEDLaf8OxYyoWgorQ==}
     dependencies:
+      '@types/unist': 2.0.6
       bail: 1.0.5
       extend: 3.0.2
       is-buffer: 2.0.5
