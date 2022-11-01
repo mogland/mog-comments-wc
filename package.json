@@ -30,7 +30,7 @@
     "@custom-elements-manifest/analyzer": "0.6.3",
     "@custom-elements-manifest/to-markdown": "0.1.0",
     "@types/md5": "2.3.2",
-    "@types/node": "18.6.1",
+    "@types/node": "18.11.9",
     "@yunyoujun/utils": "0.2.3",
     "esno": "*",
     "fs": "0.0.1-security",
