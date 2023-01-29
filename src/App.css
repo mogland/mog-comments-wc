@@ -65,6 +65,7 @@ h1 {
   padding: 2rem;
   color: #213547;
   background-color: #f3f3f3;
+  position: absolute;
 }
 
 .card {
@@ -336,4 +337,20 @@ input {
 }
 .comment-item:hover .comment-item-reply button {
   opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .comment-item {
+    background-color: #242424;
+  }
+  .textarea {
+    background-color: #242424;
+    color: #fff;
+  }
+  .textarea:focus {
+    background-color: rgb(26, 26, 26);
+  }
+  button {
+    color: #fff;
+  }
 }
