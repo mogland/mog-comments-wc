@@ -122,9 +122,10 @@ export class App extends JwcComponent {
 		return mailAvatar(mail);
 	}
 
-	private renderForm() {
+	public override render() {
 		return (
 			<>
+				<script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js" id="emoji-picker"></script>
 				<div class="comment-form-header">
 					<div class="comment-form-header-left">
 						<div class="comment-form-avatar">
@@ -234,15 +235,6 @@ export class App extends JwcComponent {
 						</button>
 					</div>
 				</div>
-			</>
-		)
-	}
-
-	public override render() {
-		return (
-			<>
-				<script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js" id="emoji-picker"></script>
-				{this.renderForm()}
 				<div class="comment-form-children">
 					<div class="comment-list">
 						<div class="comment-item">
