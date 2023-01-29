@@ -237,46 +237,12 @@ export class App extends JwcComponent {
 				</div>
 				<div class="comment-form-children">
 					<div class="comment-list">
-						<div class="comment-item">
-							<div class="comment-item-header">
-								<div class="comment-item-avatar">
-									<img
-										class="avatar"
-										src={this.mailAvatar("wibus@qq.com")}
-										alt="avatar"
-									/>
-								</div>
-								<div class="comment-item-info">
-									<div class="comment-item-name">
-										wibus-wee
-										<div class="comment-item-reply">
-											<button class="reply"
-												onClick={() => {
-													this.data.replyID = "asdasd";
-												}}
-											>回复</button>
-										</div>
-									</div>
-									<div class="comment-item-time">
-										2021-03-01 12:00:00
-									</div>
-								</div>
-							</div>
-							<div class="comment-item-content">
-								Today is a good day
-							</div>
-						</div>
-
 						{this.list?.map((item: any) => {
 							return (
 								<div class="comment-item">
 									<div class="comment-item-header">
 										<div class="comment-item-avatar">
-											<img
-												class="avatar"
-												src={this.mailAvatar(item.email)}
-												alt="avatar"
-											/>
+											<img class="avatar" src={this.mailAvatar(item.email)} alt="avatar"/>
 										</div>
 										<div class="comment-item-info">
 											<div class="comment-item-name">

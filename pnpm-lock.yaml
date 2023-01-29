@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   emoji-mart: ^5.5.2
-  jwcjs: 0.1.0-alpha.0
+  jwcjs: 0.1.0-alpha.1
   md5: ^2.3.0
   vite: ^4.0.1
 
@@ -11,7 +11,7 @@ dependencies:
   md5: 2.3.0
 
 devDependencies:
-  jwcjs: 0.1.0-alpha.0
+  jwcjs: 0.1.0-alpha.1
   vite: 4.0.4
 
 packages:
@@ -285,8 +285,8 @@ packages:
       has: 1.0.3
     dev: true
 
-  /jwcjs/0.1.0-alpha.0:
-    resolution: {integrity: sha512-dkRcjqoQ4t+Gt+HX/wlwzMgKBj0HOo+OpA5zlR4DfksTzr+DhnFmHj1FDr4dMaEKIY/52uAKn8SdQK4dpVS1nw==}
+  /jwcjs/0.1.0-alpha.1:
+    resolution: {integrity: sha512-HoR9phP43J0SINdkYjTvyId3jENWig1EFy5A3K4L6OBitJuVjrPbhY/IXdPmb/4neO80EI247WdmBeAKC9GujQ==}
     dev: true
 
   /md5/2.3.0:
