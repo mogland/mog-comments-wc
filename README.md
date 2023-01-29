@@ -1,8 +1,14 @@
+<div align="center">
+    
+<img src="https://user-images.githubusercontent.com/62133302/215319021-147d3c16-0da6-4684-a8e1-c0e3b783accd.png" width="700" />
+
 # @mogland/mog-comments-wc
 
 <pre align="center">
 🧪 Working in Progress
 </pre>
+
+</div>
 
 ## Description
 
