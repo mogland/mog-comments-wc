@@ -24,13 +24,17 @@ export class App extends JwcComponent {
 	private data: any;
 
 	private getCommentPostData() {
-		return this.data;
+		return {
+			...this.data,
+			pid: this.pid,
+			author: this.data.name,
+		};
 	}
 
 	private async postComment() {
 		const data = this.getCommentPostData();
 		let isFailed = false;
-		if (!data.pid || !data.api) {
+		if (!this.pid || !this.api) {
 			isFailed = true;
 		}
 		if (!data.name || !data.email || !data.text) {
@@ -38,19 +42,30 @@ export class App extends JwcComponent {
 		}
 		if (isFailed) {
 			console.group("❌ mog-comments: Failed to post comment");
-			["pid", "api", "name", "email", "text"].forEach((key) => {
+			["name", "email", "text"].forEach((key) => {
 				if (!data[key]) {
 					console.log(`❓ ${key} is not provided, but it is required.`);
 				}
 			});
+			if (!this.pid) { console.log("❓ pid is not provided, but it is required."); }
+			if (!this.api) { console.log("❓ api is not provided, but it is required."); }
 			console.groupEnd();
 			return;
 		}
 		const res = await fetch(`${this.api?.replace(/\/$/, "")}/comments${this.data.replyID ? `/${this.data.replyID}` : ""}`, {
 			method: "POST",
 			body: JSON.stringify(data),
+			headers: {
+				"Content-Type": "application/json",
+			},
 		});
 		const json = await res.json();
+		if (json?.code === 200) {
+			console.group("✅ mog-comments: Comment is posted.");
+			console.log(json);
+			console.groupEnd();
+			this.getCommentList();
+		}
 		this.data.text = "";
 	}
 
@@ -214,17 +229,24 @@ export class App extends JwcComponent {
 						onChange={(e) => {
 							this.data.text = e.target.value;
 						}}
+						value={this.data?.text || ""}
 					/>
 				</div>
 				<div class="tabs position-right">
 					<div class="" role="tablist">
 						<button type="button" class="tab" aria-selected="true" tabIndex={0}
+							id="send-comment"
 							onClick={async (e) => {
 								e.preventDefault();
 								e.currentTarget.classList.add("active");
 								e.currentTarget.blur();
-								await this.postComment().finally(() => {
-									const target = e.currentTarget;
+								await this.postComment()
+								.then(() => {
+									this.data.text = "";
+								})
+								.finally(() => {
+									const document = this.shadowRoot;
+									const target = document.getElementById("send-comment");
 									setTimeout(() => {
 										target.classList.remove("active");
 									}, 1000);
