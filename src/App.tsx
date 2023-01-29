@@ -1,6 +1,5 @@
 import { Component, Fragment, JwcComponent, Prop, h } from 'jwcjs'
 import md5 from 'md5'
-
 import styles from './App.css?inline'
 
 @Component({
