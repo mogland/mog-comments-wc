@@ -1,0 +1,9 @@
+{
+  "origin": "wibus-wee/wlint-config",
+  "category": "default",
+  "packages": [
+    "@typescript-eslint/eslint-plugin",
+    "eslint",
+    "prettier"
+  ]
+}
