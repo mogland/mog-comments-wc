@@ -6,7 +6,7 @@
 
 ## Description
 
-This is a web component that allows users to comment on a page. powered by [mog](https://mog.js.org/) and [jwcjs](https://jwc.js.org/)
+A web component that allows users to comment on a page. Powered by [mog](https://mog.js.org/) and [jwcjs](https://jwc.js.org/)
 
 ## Installation
 
@@ -19,7 +19,10 @@ pnpm add @mogland/mog-comments-wc
 ## Usage
 
 ```html
-<mog-comments-wc></mog-comments-wc>
+<mog-comments
+  api="https://127.0.0.1:2330/api"
+  pid="63bed80541aaa292059ec7a1f"
+></mog-comments>
 ```
 
 ## Author

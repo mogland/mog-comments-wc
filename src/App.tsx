@@ -3,7 +3,7 @@ import { JwcComponent, Component, Prop, h, Fragment } from "jwcjs";
 import styles from "./App.css?inline";
 
 @Component({
-	name: "app-element",
+	name: "mog-comments",
 	css: styles,
 })
 export class App extends JwcComponent {
