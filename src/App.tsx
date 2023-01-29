@@ -291,7 +291,3 @@ export class App extends JwcComponent {
 		);
 	}
 }
-
-const style = `
-
-`
